@@ -3,3 +3,4 @@
 %uri=https://github.com/melody-universe/another-todo
 
 schema 2023-11-19T17:41:16Z Melody Universe <melody.universe.2021@gmail.com> # Add schema for todo objects
+users [schema] 2023-11-19T20:06:22Z Melody Universe <melody.universe.2021@gmail.com> # Create table to track users
