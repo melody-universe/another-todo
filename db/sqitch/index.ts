@@ -42,7 +42,7 @@ export default async function sqitch(input: string[]) {
   await new Docker().run("sqitch/sqitch", input, receiver, {
     Env:
       env["CI"] === "true"
-        ? []
+        ? ["SQITCH_FULLNAME=CI", "SQITCH_EMAIL=admin@melody-universe.com"]
         : [
             await gitToSqitch("FULLNAME", "name"),
             await gitToSqitch("EMAIL", "email"),
