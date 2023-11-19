@@ -1,0 +1,8 @@
+on:
+  push:
+
+jobs:
+  ci:
+    steps:
+      - run: npm ci
+      - run: npm test
