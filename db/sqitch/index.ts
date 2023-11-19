@@ -1,4 +1,5 @@
 import Docker from "dockerode";
+import { execa } from "execa";
 import { join } from "path";
 import { stdout } from "process";
 
@@ -28,6 +29,10 @@ export default async function sqitch(input: string[]) {
 
   // run the Docker image
   await docker.run("sqitch/sqitch", input, stdout, {
+    Env: [
+      await gitToSqitch("FULLNAME", "name"),
+      await gitToSqitch("EMAIL", "email"),
+    ],
     HostConfig: {
       AutoRemove: true,
       Mounts: [
@@ -36,4 +41,13 @@ export default async function sqitch(input: string[]) {
     },
     User: "1000:1000",
   });
+}
+
+async function gitToSqitch(
+  sqitchName: string,
+  gitVariable: string
+): Promise<string> {
+  return `SQITCH_${sqitchName}=${
+    (await execa("git", ["config", `user.${gitVariable}`])).stdout
+  }`;
 }
