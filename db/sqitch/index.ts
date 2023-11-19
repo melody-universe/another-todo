@@ -1,7 +1,7 @@
 import Docker from "dockerode";
 import { execa } from "execa";
 import { join } from "path";
-import { stdout } from "process";
+import { env, stdout } from "process";
 import { PassThrough } from "stream";
 
 export default async function sqitch(input: string[]) {
@@ -36,10 +36,13 @@ export default async function sqitch(input: string[]) {
 
   // run the Docker image
   await docker.run("sqitch/sqitch", input, receiver, {
-    Env: [
-      await gitToSqitch("FULLNAME", "name"),
-      await gitToSqitch("EMAIL", "email"),
-    ],
+    Env:
+      env["CI"] === "true"
+        ? []
+        : [
+            await gitToSqitch("FULLNAME", "name"),
+            await gitToSqitch("EMAIL", "email"),
+          ],
     HostConfig: {
       AutoRemove: true,
       Mounts: [
