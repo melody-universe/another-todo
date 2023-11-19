@@ -3,7 +3,7 @@ import {
   StartedPostgreSqlContainer,
 } from "@testcontainers/postgresql";
 import { afterAll, beforeAll, expect, test } from "vitest";
-import sqitch from "./sqitch";
+import sqitch, { pullSqitch } from "./sqitch";
 import { EOL } from "os";
 
 let pgContainer: StartedPostgreSqlContainer;
@@ -11,6 +11,7 @@ let pgContainer: StartedPostgreSqlContainer;
 beforeAll(async () => {
   pgContainer = await new PostgreSqlContainer().start();
 });
+beforeAll(pullSqitch);
 
 afterAll(async () => {
   await pgContainer.stop();

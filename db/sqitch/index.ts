@@ -4,10 +4,9 @@ import { join } from "path";
 import { env, stdout } from "process";
 import { PassThrough } from "stream";
 
-export default async function sqitch(input: string[]) {
+export async function pullSqitch() {
   const docker = new Docker();
 
-  // make sure Docker image exists locally
   const images = await docker.listImages();
   if (
     !images.some(
@@ -27,6 +26,11 @@ export default async function sqitch(input: string[]) {
       })
     );
   }
+}
+
+export default async function sqitch(input: string[]) {
+  // make sure Docker image exists locally
+  await pullSqitch();
 
   // set up stream to capture output before passing it to stdout
   const receiver = new PassThrough();
@@ -35,7 +39,7 @@ export default async function sqitch(input: string[]) {
   receiver.pipe(stdout);
 
   // run the Docker image
-  await docker.run("sqitch/sqitch", input, receiver, {
+  await new Docker().run("sqitch/sqitch", input, receiver, {
     Env:
       env["CI"] === "true"
         ? []
