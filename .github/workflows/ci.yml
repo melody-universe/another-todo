@@ -3,6 +3,7 @@ on:
 
 jobs:
   ci:
+    runs-on: ubuntu-latest
     steps:
       - run: npm ci
       - run: npm test
