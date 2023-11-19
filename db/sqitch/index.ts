@@ -2,6 +2,7 @@ import Docker from "dockerode";
 import { execa } from "execa";
 import { join } from "path";
 import { stdout } from "process";
+import { PassThrough } from "stream";
 
 export default async function sqitch(input: string[]) {
   const docker = new Docker();
@@ -27,8 +28,14 @@ export default async function sqitch(input: string[]) {
     );
   }
 
+  // set up stream to capture output before passing it to stdout
+  const receiver = new PassThrough();
+  const output: string[] = [];
+  receiver.on("data", (chunk: unknown) => output.push(`${chunk}`));
+  receiver.pipe(stdout);
+
   // run the Docker image
-  await docker.run("sqitch/sqitch", input, stdout, {
+  await docker.run("sqitch/sqitch", input, receiver, {
     Env: [
       await gitToSqitch("FULLNAME", "name"),
       await gitToSqitch("EMAIL", "email"),
@@ -38,9 +45,13 @@ export default async function sqitch(input: string[]) {
       Mounts: [
         { Type: "bind", Source: join(__dirname, ".."), Target: "/repo" },
       ],
+      NetworkMode: "host",
     },
     User: "1000:1000",
+    Tty: false,
   });
+
+  return output.join("");
 }
 
 async function gitToSqitch(
