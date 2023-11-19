@@ -28,7 +28,10 @@ export async function pullSqitch() {
   }
 }
 
-export default async function sqitch(input: string[]) {
+export default async function sqitch(
+  input: string[],
+  options?: { attachStdout: boolean }
+) {
   // make sure Docker image exists locally
   await pullSqitch();
 
@@ -36,7 +39,9 @@ export default async function sqitch(input: string[]) {
   const receiver = new PassThrough();
   const output: string[] = [];
   receiver.on("data", (chunk: unknown) => output.push(`${chunk}`));
-  receiver.pipe(stdout);
+  if (options?.attachStdout ?? true) {
+    receiver.pipe(stdout);
+  }
 
   // run the Docker image
   await new Docker().run("sqitch/sqitch", input, receiver, {

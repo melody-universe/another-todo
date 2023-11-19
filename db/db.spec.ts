@@ -18,11 +18,10 @@ afterAll(async () => {
 });
 
 test("apply sqitch migrations", async () => {
-  const output = await sqitch([
-    "deploy",
-    "--verify",
-    `db:${pgContainer.getConnectionUri()}`,
-  ]);
+  const output = await sqitch(
+    ["deploy", "--verify", `db:${pgContainer.getConnectionUri()}`],
+    { attachStdout: false }
+  );
   expect(
     output.indexOf("\x02"),
     `Error deploying schema changes:${EOL}${output}`
