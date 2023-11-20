@@ -3,10 +3,10 @@
 BEGIN;
 
 CREATE TABLE todo.users (
-    id INTEGER PRIMARY KEY,
-    username TEXT UNIQUE,
-    hashed_password BYTEA,
-    salt BYTEA
+    id SERIAL PRIMARY KEY,
+    username TEXT UNIQUE NOT NULL,
+    hashed_password BYTEA NOT NULL,
+    salt BYTEA NOT NULL
 );
 
 COMMIT;

@@ -9,7 +9,8 @@ import { EOL } from "os";
 let pgContainer: StartedPostgreSqlContainer;
 
 beforeAll(async () => {
-  pgContainer = await new PostgreSqlContainer().start();
+  const container = new PostgreSqlContainer();
+  pgContainer = await container.start();
 });
 beforeAll(pullSqitch);
 
@@ -17,7 +18,7 @@ afterAll(async () => {
   await pgContainer.stop();
 });
 
-test("apply sqitch migrations", async () => {
+test("apply database schema migrations", async () => {
   const output = await sqitch(
     ["deploy", "--verify", `db:${pgContainer.getConnectionUri()}`],
     { attachStdout: false }

@@ -4,6 +4,8 @@ import { join } from "path";
 import { env, stdout } from "process";
 import { PassThrough } from "stream";
 
+/* c8 ignore start */
+
 export async function pullSqitch() {
   const docker = new Docker();
 
@@ -74,3 +76,5 @@ async function gitToSqitch(
     (await execa("git", ["config", `user.${gitVariable}`])).stdout
   }`;
 }
+
+/* c8 ignore stop */
