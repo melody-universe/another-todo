@@ -12,7 +12,7 @@ beforeAll(async () => {
   const container = new PostgreSqlContainer();
   pgContainer = await container.start();
 });
-beforeAll(pullSqitch);
+beforeAll(pullSqitch, 30000);
 
 afterAll(async () => {
   await pgContainer.stop();
