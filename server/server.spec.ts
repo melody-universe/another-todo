@@ -28,7 +28,7 @@ beforeAll(async () => {
   await pgClient.connect();
   server = startServer({ postgresUri: pgContainer.getConnectionUri() });
   address = `http://[::]:${(server.address() as AddressInfo).port}`;
-});
+}, { timeout: 30000 });
 
 afterAll(async () => {
   await pgClient.end();
