@@ -8,6 +8,7 @@ on:
         required: true
         type: boolean
       app:
+        default: true
         description: App Services
         required: true
         type: boolean
