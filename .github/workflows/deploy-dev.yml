@@ -1,0 +1,23 @@
+name: Deploy (Dev)
+
+on:
+  workflow_dispatch:
+    inputs:
+      infrastructure:
+        description: Infrastructure
+        required: true
+        type: boolean
+      app:
+        description: App Services
+        required: true
+        type: boolean
+      crm-solution:
+        description: CRM Solution
+        required: true
+        type: boolean
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "hello, world"
